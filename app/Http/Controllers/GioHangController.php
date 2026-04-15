@@ -21,7 +21,7 @@ class GioHangController extends Controller
     public function add(Request $request)
     {
         $id = $request->id;
-        $soLuong = $request->so_luong;
+        $soLuong = $request->so_luong ?? 1;
 
         $sp = DB::table('san_pham')->where('id', $id)->first();
 
@@ -39,7 +39,7 @@ class GioHangController extends Controller
                 'ten_san_pham' => $sp->ten_san_pham,
                 'gia_ban' => $sp->gia_ban,
                 'hinh_anh' => $sp->hinh_anh,
-                'so_luong' => $soLuong,
+                'so_luong' => $soLuong ?? 1,
             ];
         }
 
@@ -63,46 +63,41 @@ public function delete($id)
 }
 
     // ORDER
-    public function order(Request $request)
-    {
-        $cart = session('cart', []);
-
-        if (empty($cart)) return back();
-
-        $orderId = DB::table('don_hang')->insertGetId([
-            'ngay_dat_hang' => now(),
-            'tinh_trang' => 1,
-            'hinh_thuc_thanh_toan' => $request->hinh_thuc_thanh_toan,
-            'user_id' => auth()->id() ?? 1
-        ]);
-
-        foreach ($cart as $item) {
-            DB::table('chi_tiet_don_hang')->insert([
-                'ma_don_hang' => $orderId,
-                'san_pham_id' => $item['id'],
-                'so_luong' => $item['so_luong'],
-                'don_gia' => $item['gia_ban'],
-            ]);
-        }
-
-        session()->forget('cart');
-
-        return back()->with('success', 'Đặt hàng thành công');
-    }
-    public function datHang()
+public function order(Request $request)
 {
-    $cart = session()->get('cart', []);
+    $cart = session('cart', []);
 
     if (empty($cart)) {
-        return redirect()->back()->with('error', 'Giỏ hàng đang trống');
+        return back()->with('error', 'Giỏ hàng đang trống');
     }
 
-    $emailNhan = 'tynguyenhuynhsaly2604@gmail.com'; // email bạn muốn nhận
+    $tongTien = 0;
+    foreach ($cart as $item) {
+        $tongTien += ($item['so_luong'] ?? 1) * ($item['gia_ban'] ?? 0);
+    }
 
-    Mail::to($emailNhan)->send(new DatHangThanhCongMail($cart));
+    $orderId = DB::table('don_hang')->insertGetId([
+        'ngay_dat_hang' => now(),
+        'tinh_trang' => 1,
+        'hinh_thuc_thanh_toan' => $request->hinh_thuc_thanh_toan,
+        'user_id' => auth()->id() ?? 1
+    ]);
+
+    foreach ($cart as $item) {
+        DB::table('chi_tiet_don_hang')->insert([
+            'ma_don_hang' => $orderId,
+            'id_san_pham' => $item['id'],
+            'so_luong' => $item['so_luong'] ?? 1,
+            'don_gia' => $item['gia_ban'],
+        ]);
+    }
+
+    $emailNhan = 'tynguyenhuynhsaly2604@gmail.com';
+    Mail::to($emailNhan)->send(new DatHangThanhCongMail($cart, $tongTien));
 
     session()->forget('cart');
 
-    return redirect()->back()->with('success', 'Đặt hàng thành công, email đã được gửi');
+    return back()->with('success', 'Đặt hàng thành công, email đã được gửi');
 }
+    
 }

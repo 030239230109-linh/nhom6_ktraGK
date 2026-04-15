@@ -11,10 +11,12 @@ class DatHangThanhCongMail extends Mailable
     use Queueable, SerializesModels;
 
     public $cart;
+    public $tongTien;
 
-    public function __construct($cart)
+    public function __construct($cart, $tongTien)
     {
         $this->cart = $cart;
+        $this->tongTien = $tongTien;
     }
 
     public function build()

@@ -11,17 +11,15 @@
 
     <p>Danh sách sản phẩm:</p>
     <ul>
-        @php $tongTien = 0; @endphp
         @foreach($cart as $item)
-            @php $thanhTien = $item['gia_ban'] * $item['so_luong']; $tongTien += $thanhTien; @endphp
             <li>
                 {{ $item['ten_san_pham'] }} -
-                Số lượng: {{ $item['so_luong'] }} -
-                Giá: {{ number_format($item['gia_ban'], 0, ',', '.') }} đ
+                Số lượng: {{ $item['so_luong'] ?? 1 }} -
+                Giá: {{ number_format($item['gia_ban'] ?? 0, 0, ',', '.') }} đ
             </li>
         @endforeach
     </ul>
-    
+
     <p><strong>Tổng tiền:</strong> {{ number_format($tongTien, 0, ',', '.') }} đ</p>
 
     <p>Trân trọng.</p>
