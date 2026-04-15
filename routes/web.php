@@ -18,7 +18,7 @@ require __DIR__.'/auth.php';
 
 
 Route::get('/san-pham/{id}', [SanPhamController::class, 'show'])->name('sanpham.show');
-Route::post('/gio-hang/them', [GioHangController::class, 'add'])->name('giohang.add');
+Route::get('/gio-hang', [GioHangController::class, 'index'])->name('giohang.index');
 Route::post('/timkiem', [SanPhamController::class, 'timKiem'])->name('sanpham.timkiem');
 
 //câu 2
@@ -26,8 +26,8 @@ Route::get('/', [HomeController::class, 'trangchu']);
 Route::get('/caycanh/theloai/{id}', [HomeController::class, 'theloai']);
 
 //câu 3
-Route::post('/cart/add', [HomeController::class, 'add'])->name('cartadd');
-Route::get('/cart', [HomeController::class, 'index'])->name('cart');
-Route::get('/cart/delete/{id}', [HomeController::class, 'delete'])->name('cartdelete');
-Route::post('/cart/order', [HomeController::class, 'order'])->name('cartorder');
+Route::post('/giohang/add', [GioHangController::class, 'add'])->name('giohang.add');
+Route::post('/giohang/delete/{id}', [GioHangController::class, 'delete'])
+    ->name('cartdelete');
+Route::post('/giohang/order', [GioHangController::class, 'order'])->name('ordercreate');
 

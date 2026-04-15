@@ -1,5 +1,5 @@
-<x-CayCanhLayout>
-    <x-slot name="title">Sách</x-slot>
+<x-Cay-Canh-Layout>
+    <x-slot name="title">Cây cảnh </x-slot>
 
     <style>
         .list-caycanh {
@@ -54,13 +54,13 @@
         <div class='list-caycanh'>
             @foreach($san_pham as $row)
                 <div class='caycanh'>
-                    <a href="{{url('caycanh/chitiet/'.$row->id)}}">
+                    <a href="{{url('san-pham/'.$row->id)}}">
                         <img src="{{ asset('storage/image/' . $row->hinh_anh) }}" width='200px' height='200px'><br>
                         <b>{{$row->ten_san_pham}}</b><br/>
                         <i>{{number_format($row->gia_ban,0,",",".")}}đ</i><br>
                     </a>
                     <div class='btn-add-product'>
-                        <button class='btn btn-success btn-sm mb-1 add-product' book_id="{{$row->id}}">
+                        <button class="btn btn-success btn-sm mb-1 add-product" data-id="{{$row->id}}">
                             Thêm vào giỏ hàng
                         </button>
                     </div>
@@ -70,22 +70,28 @@
     </div>
     <script>
 
-$(document).on("click", ".add-product", function(){
-    let id = $(this).attr("book_id");
+$(document).ready(function(){
 
-    $.ajax({
-        type:"POST",
-        url: "{{route('cartadd')}}",
-        data:{
-            "_token": "{{ csrf_token() }}",
-            "id": id,
-            "num": 1
-        },
-        success:function(data){
-            $("#cart-number-product").html(data);
-        }
+    $(document).on("click", ".add-product", function(){
+        let id = $(this).data("id");
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('giohang.add') }}",
+            data: {
+                _token: "{{ csrf_token() }}",
+                id: id,
+                num: 1
+            },
+            success: function(res){
+                $("#cart-number-product").html(res.count);
+                alert("Đã thêm vào giỏ hàng");
+}
+        });
+
     });
+
 });
     </script>
 
-</x-CayCanhLayout>
+</x-Cay-Canh-Layout>

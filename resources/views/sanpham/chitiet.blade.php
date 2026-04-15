@@ -44,16 +44,14 @@
     <span>Giá:</span>
     <span style="color: red;">{{ number_format($sanPham->gia_ban, 0, ',', '.') }} VND</span>
 </div>
-                <form action="{{ route('giohang.add') }}" method="POST" style="margin-top: 15px;">
+    @csrf
+ <form id="add-cart">
     @csrf
     <input type="hidden" name="id" value="{{ $sanPham->id }}">
+    <input type="number" name="so_luong" value="1" min="1">
 
-    <label for="so_luong">Số lượng mua:</label>
-    <input type="number" name="so_luong" id="so_luong" value="1" min="1" style="width: 60px; margin: 0 10px;">
-
-    <button type="submit" class="btn btn-primary">
-        Thêm vào giỏ hàng
-    </button>
+    <button type="submit">Thêm vào giỏ</button>
+</form>
 </form>
 
 @if(session('success'))
@@ -64,4 +62,21 @@
             </div>
         </div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$("#add-cart").submit(function(e){
+    e.preventDefault();
+
+    $.ajax({
+        url: "{{ route('giohang.add') }}",
+        type: "POST",
+        data: $(this).serialize(),
+        success: function(res){
+            $("#cart-number-product").html(res.count);
+            alert("Đã thêm vào giỏ hàng");
+        }
+    });
+});
+</script>
 </x-cay-canh-layout>
