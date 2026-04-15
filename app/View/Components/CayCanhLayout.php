@@ -26,4 +26,5 @@ class CayCanhLayout extends Component
     {
         return view('components.cay-canh-layout');
     }
+    
 }
