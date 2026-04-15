@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\DatHangThanhCongMail;
 
 class GioHangController extends Controller
 {
@@ -87,4 +89,20 @@ public function delete($id)
 
         return back()->with('success', 'Đặt hàng thành công');
     }
+    public function datHang()
+{
+    $cart = session()->get('cart', []);
+
+    if (empty($cart)) {
+        return redirect()->back()->with('error', 'Giỏ hàng đang trống');
+    }
+
+    $emailNhan = 'tynguyenhuynhsaly2604@gmail.com'; // email bạn muốn nhận
+
+    Mail::to($emailNhan)->send(new DatHangThanhCongMail($cart));
+
+    session()->forget('cart');
+
+    return redirect()->back()->with('success', 'Đặt hàng thành công, email đã được gửi');
+}
 }

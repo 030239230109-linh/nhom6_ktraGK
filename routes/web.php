@@ -35,3 +35,4 @@ Route::post('/giohang/delete/{id}', [GioHangController::class, 'delete'])
     ->name('cartdelete');
 Route::post('/giohang/order', [GioHangController::class, 'order'])->name('ordercreate');
 
+Route::post('/dat-hang', [GioHangController::class, 'datHang'])->name('giohang.dathang');

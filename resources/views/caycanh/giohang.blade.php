@@ -68,6 +68,10 @@
                 padding: 8px;
             }
         </style>
+        <form action="{{ route('giohang.dathang') }}" method="POST">
+    @csrf
+    <button type="submit" class="btn btn-primary">Đặt hàng</button>
+</form>
 
         <div style='font-weight:bold;width:70%;margin:0 auto;text-align:center; margin-top:15px;'>
             @auth
