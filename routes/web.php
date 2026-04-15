@@ -13,3 +13,9 @@ Route::get('/dashboard', function () {
 
 
 require __DIR__.'/auth.php';
+use App\Http\Controllers\SanPhamController;
+use App\Http\Controllers\GioHangController;
+
+Route::get('/san-pham/{id}', [SanPhamController::class, 'show'])->name('sanpham.show');
+Route::post('/gio-hang/them', [GioHangController::class, 'add'])->name('giohang.add');
+Route::post('/timkiem', [SanPhamController::class, 'timKiem'])->name('sanpham.timkiem');
