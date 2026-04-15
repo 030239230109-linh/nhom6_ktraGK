@@ -76,23 +76,6 @@
         <div style='font-weight:bold;width:70%;margin:0 auto;text-align:center; margin-top:15px;'>
             @auth
                 @if(!empty($cart) && count($cart) > 0)
-
-                    <form method='post' action="{{ route('ordercreate') }}">
-                        @csrf
-
-                        Hình thức thanh toán <br>
-
-                        <select name='hinh_thuc_thanh_toan' class='form-control form-control-sm'>
-                            <option value='1'>Tiền mặt</option>
-                            <option value='2'>Chuyển khoản</option>
-                            <option value='3'>Thanh toán VNPay</option>
-                        </select>
-
-                        <br>
-
-                        <input type='submit' class='btn btn-sm btn-primary mt-1' value='ĐẶT HÀNG'>
-                    </form>
-
                 @else
                     Vui lòng chọn sản phẩm cần mua
                 @endif

@@ -21,7 +21,7 @@
             </li>
         @endforeach
     </ul>
-
+    
     <p><strong>Tổng tiền:</strong> {{ number_format($tongTien, 0, ',', '.') }} đ</p>
 
     <p>Trân trọng.</p>
