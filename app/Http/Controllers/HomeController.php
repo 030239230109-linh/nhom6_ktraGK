@@ -68,33 +68,6 @@ public function theloai(Request $request, $id)
     return view('caycanh.index', compact('san_pham','categories'));
 }
 
-
-    // Câu 4
-    public function add(Request $request)
-{
-    $id = $request->id;
-    $num = $request->num;
-
-    $san_pham = DB::table('san_pham')->where('id', $id)->first();
-
-    $cart = Session::get('cart', []);
-
-    if(isset($cart[$id])){
-        $cart[$id]['so_luong'] += $num;
-    } else {
-        $cart[$id] = [
-            'ten' => $product->ten_san_pham,
-            'gia' => $product->gia_ban,
-            'hinh' => $product->hinh_anh,
-            'so_luong' => $num
-        ];
-    }
-
-    Session::put('cart', $cart);
-
-    return count($cart); // trả về số lượng sản phẩm
-}
-
 public function index()
 {
     $san_pham = DB::table('san_pham')->limit(20)->get();
@@ -103,43 +76,5 @@ public function index()
     return view('caycanh.index', compact('san_pham','categories'));
 }
 
-public function delete($id)
-{
-    $cart = Session::get('cart');
 
-    unset($cart[$id]);
-
-    Session::put('cart', $cart);
-
-    return redirect()->back();
-}
-
-public function order()
-{
-    $cart = Session::get('cart');
-
-    if(!$cart) return redirect()->back();
-
-    // tạo đơn hàng
-    $order_id = DB::table('don_hang')->insertGetId([
-        'ngay_dat_hang' => now(),
-        'tinh_trang' => 1,
-        'hinh_thuc_thanh_toan' => 1,
-        'user_id' => 1
-    ]);
-
-    // chi tiết đơn
-    foreach($cart as $id => $item){
-        DB::table('chi_tiet_don_hang')->insert([
-            'ma_don_hang' => $order_id,
-            'id_san_pham' => $id,
-            'so_luong' => $item['so_luong'],
-            'don_gia' => $item['gia']
-        ]);
-    }
-
-    Session::forget('cart');
-
-    return redirect()->back()->with('success', 'Đặt hàng thành công!');
-} 
 }
